@@ -13,7 +13,7 @@
       <tbody>
         <tr
           v-for="project in this.allProjects"
-          :key="project.projectId"
+          :key="project.id"
           @click="SelectThisProject(project.id)"
         >
           <td>{{ project.name }}</td>
@@ -45,6 +45,12 @@ export default {
     SelectThisProject: function (projectId) {
       this.selectedProject = projectId;
       this.$emit('GetSelectedProject', this.selectedProject);
+      let myCollection = document.getElementsByClassName('active'); //Логика отображения выделения строчки в таблице
+      for (let i = 0; i < myCollection.length; i++) {
+        let elementOfCollection = myCollection[i];
+        elementOfCollection.classList.remove('active'); //Удаляем класс активный у всех строчек
+      }
+      event.currentTarget.classList.add('active'); //Подключаем класс активный к кликнутой строчке
     },
   },
 };
@@ -77,12 +83,13 @@ thead td {
 tr {
   border: 1px solid #e0e0e0;
   height: 26px;
+  cursor: pointer;
 }
 tr:hover {
-  background-color: #ebebeb;
+  background-color: #e5caff;
 }
-tr:active {
-  background-color: #b163ff;
-  color: white;
+.active {
+  background-color: #e5caff;
+  color: #22272b;
 }
 </style>

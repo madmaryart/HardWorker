@@ -1,6 +1,6 @@
 <template>
   <div class="reportForm">
-    <p>{{ this.week[0] }} - {{ this.week[6] }}</p>
+    <p class="week">за период: {{ this.week[0] }} - {{ this.week[6] }}</p>
     <table>
       <thead>
         <td>Проект</td>
@@ -39,8 +39,10 @@
         </tr>
       </tbody>
     </table>
-    <ButtonSecondary @wasClicked="$parent.$emit('close')" />
-    <ButtonPrimary @wasClicked="SubmitReport">Отправить</ButtonPrimary>
+    <div class="buttons">
+      <ButtonSecondary @wasClicked="$parent.$emit('close')" />
+      <ButtonPrimary @wasClicked="EmitHandler">Отправить</ButtonPrimary>
+    </div>
   </div>
 </template>
 
@@ -55,11 +57,11 @@ export default {
     return {
       listProjects: [],
       report: {
-        date_from: '',
-        date_to: '',
+        dateFrom: '',
+        dateTo: '',
         projectType: '',
         projectDescription: '',
-        project_id: '',
+        projectId: '',
         monday: 0,
         tuesday: 0,
         wednesday: 0,
@@ -81,17 +83,25 @@ export default {
       this.$store
         .dispatch('Update_profile_info')
         .then((this.listProjects = this.$store.state.profileInfo.listProjects));
+      console.log(this.listProjects);
     },
     ToWriteValues: function (payload) {
-      this.report.project_id = payload;
+      // console.log(payload);
+      this.report.projectId = payload[0];
     },
-    SubmitReport: function () {
-      this.report.date_from = this.week[0];
-      this.report.date_to = this.week[6];
-      this.$store
-        .dispatch('SubmitReport', this.report)
-        .then(this.$store.dispatch('Get_reports'));
+    EmitHandler() {
+      this.report.dateFrom = this.week[0];
+      this.report.dateTo = this.week[6];
+      this.$emit('EmitSubmitReport', this.report);
+      this.$parent.$emit('close');
     },
+    // SubmitReport: function () {
+    //   this.report.date_from = this.week[0];
+    //   this.report.date_to = this.week[6];
+    //   this.$store
+    //     .dispatch('SubmitReport', this.report)
+    //     .then(this.$store.dispatch('Get_reports'));
+    // },
   },
 };
 </script>
@@ -140,5 +150,18 @@ textarea {
 }
 .projects {
   width: 120px;
+}
+.reportForm {
+  align-items: center;
+}
+.week {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
+  font-size: 18px;
+}
+.buttons {
+  display: flex;
+  justify-content: center;
 }
 </style>

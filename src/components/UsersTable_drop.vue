@@ -9,7 +9,6 @@
           <td>Роль</td>
           <td>Отдел</td>
           <td>Активный</td>
-          <td>Номер</td>
         </thead>
         <tbody>
           <tr v-for="(user, index) in this.allUsers" :key="index">
@@ -29,7 +28,6 @@
             <td>{{ user.role }}</td>
             <td>{{ user.department.department }}</td>
             <td>{{ user.active }}</td>
-            <td>{{ user.id }}</td>
           </tr>
         </tbody>
       </table>
@@ -77,7 +75,6 @@
           <td>Роль</td>
           <td>Отдел</td>
           <td>Активный</td>
-          <td>Номер</td>
         </thead>
         <tbody>
           <tr v-for="(user, index) in this.recievedUsers" :key="index">
@@ -96,7 +93,6 @@
             <td>{{ user.role }}</td>
             <td>{{ user.department }}</td>
             <td>{{ user.active }}</td>
-            <td>{{ user.id }}</td>
           </tr>
         </tbody>
       </table>

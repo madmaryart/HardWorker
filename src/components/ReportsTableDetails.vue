@@ -8,11 +8,11 @@
       </p>
       <p>
         Пользователь:
-        {{ this.$props.reportDetails[0].user.username }}
+        {{ this.$props.reportDetails[0].userName }}
       </p>
       <p>
         Отдел:
-        {{ this.$props.reportDetails[0].user.department }}
+        {{ this.$props.reportDetails[0].userDepartmentName }}
       </p>
     </div>
 
@@ -28,7 +28,10 @@
           v-for="reportDetail in this.$props.reportDetails"
           :key="reportDetail.id"
         >
+          <td>{{ reportDetail.projectName }}</td>
+          <td>{{ reportDetail.projectType }}</td>
           <td>{{ reportDetail.projectDescription }}</td>
+          <td>{{ reportDetail.dateFrom + '-' + reportDetail.dateTo }}</td>
         </tr>
       </tbody>
     </table>
@@ -75,12 +78,6 @@ thead td {
 tr {
   border: 1px solid #e0e0e0;
   height: 26px;
-}
-tr:hover {
-  background-color: #ebebeb;
-}
-tr:active {
-  background-color: #b163ff;
-  color: white;
+  cursor: pointer;
 }
 </style>

@@ -20,17 +20,30 @@
       Отдел:
       <SelectComp
         :itemList="allDepartments"
-        @GetSelectedItem="toWriteSelectedDepartment"
+        @GetSelectedItem="
+          (payload) => {
+            ToWriteValuesDepartment(payload);
+          }
+        "
       />
     </label>
     <label>
       Роль:
-      <SelectComp :itemList="allRoles" @GetSelectedItem="toWriteSelectedRole" />
+      <SelectComp
+        :itemList="allRoles"
+        @GetSelectedItem="
+          (payload) => {
+            ToWriteValuesRole(payload);
+          }
+        "
+      />
     </label>
-    <button-primary @wasClicked="submitUser">Создать</button-primary>
-    <button-secondary @wasClicked="$parent.$emit('close')"
-      >Отмена</button-secondary
-    >
+    <div class="buttons">
+      <button-primary @wasClicked="EmitHandler">Создать</button-primary>
+      <button-secondary @wasClicked="$parent.$emit('close')"
+        >Отмена</button-secondary
+      >
+    </div>
   </div>
 </template>
 
@@ -68,15 +81,17 @@ export default {
       .then(() => (this.allDepartments = this.$store.state.allDepartments));
   },
   methods: {
-    submitUser: function () {
-      this.$store.dispatch('SubmitUser', this.user);
+    EmitHandler: function () {
+      this.$emit('EmitSubmitUser', this.user);
+      this.$parent.$emit('close');
     },
-    toWriteSelectedDepartment: function (isSelectedId) {
-      this.user.department = isSelectedId;
+
+    ToWriteValuesDepartment: function (payload) {
+      this.user.department = payload[1];
       console.log(this.user.department);
     },
-    toWriteSelectedRole: function (isSelectedId) {
-      this.user.role = isSelectedId;
+    ToWriteValuesRole: function (payload) {
+      this.user.role = payload[1];
     },
   },
 };
@@ -90,5 +105,9 @@ label {
   display: flex;
   flex-direction: column;
   padding: 5px;
+}
+.buttons {
+  display: flex;
+  justify-content: center;
 }
 </style>

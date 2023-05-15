@@ -1,6 +1,6 @@
 <template>
   <nav class="sidebar">
-    <ul>
+    <ul @click="SelectSection">
       <li>
         <a href="#/reports"> <TabelIcon />Табели </a>
       </li>
@@ -33,7 +33,16 @@ export default {
   data: function () {
     return {};
   },
-  methods: {},
+  methods: {
+    SelectSection: function () {
+      let myCollection = document.getElementsByClassName('activeSection'); //Логика отображения выделения строчки в таблице
+      for (let i = 0; i < myCollection.length; i++) {
+        let elementOfCollection = myCollection[i];
+        elementOfCollection.classList.remove('activeSection'); //Удаляем класс активный у всех строчек
+      }
+      event.target.classList.add('activeSection'); //Подключаем класс активный к кликнутой строчке
+    },
+  },
 };
 </script>
 
@@ -74,7 +83,7 @@ export default {
 .sidebar ul li a svg {
   padding-right: 28px;
 }
-.active {
+.activeSection {
   background-color: #ead9ff;
 }
 </style>

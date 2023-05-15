@@ -9,10 +9,16 @@
         <p>Новый пользователь</p>
       </template>
       <template v-slot:body>
-        <NewUser_form />
+        <NewUser_form
+          @EmitSubmitUser="
+            (payload) => {
+              SubmitUser(payload);
+            }
+          "
+        />
       </template>
     </modal-window>
-    <UsersTable />
+    <UsersTable :allUsers="allUsers" />
   </div>
 </template>
 
@@ -32,8 +38,26 @@ export default {
   data() {
     return {
       modalOpened: false,
+      allUsers: [],
     };
   },
-  methods: {},
+  mounted: function () {
+    this.GetUsers();
+  },
+  methods: {
+    GetUsers: function () {
+      this.$store.dispatch('Get_users').then(() => {
+        this.allUsers = this.$store.state.allUsers;
+        this.totalPagesArr = this.$store.state.totalPages;
+      });
+    },
+    SubmitUser: function (payload) {
+      this.$store.dispatch('SubmitUser', payload).then(() => {
+        if (this.$store.state.responseStatus) {
+          this.GetUsers();
+        }
+      });
+    },
+  },
 };
 </script>

@@ -30,7 +30,13 @@
         <p>Новый проект</p>
       </template>
       <template v-slot:body>
-        <NewProject_form />
+        <NewProject_form
+          @EmitSubmitProject="
+            (payload) => {
+              SubmitProject(payload);
+            }
+          "
+        />
         <!-- @haveResponse="PushTheValue()" -->
       </template>
     </modal-window>
@@ -75,15 +81,23 @@ export default {
       this.selectedProject = projectId;
     },
     DeleteProject: function () {
-      this.$store.dispatch('Delete_project', this.selectedProject);
+      this.$store.dispatch('Delete_project', this.selectedProject).then(() => {
+        if (this.$store.state.responseStatus) {
+          this.GetProjects();
+        }
+      });
 
       console.log(this.selectedProject);
       this.selectedProject = '';
-      setTimeout(this.GetProjects, 5000);
+      //после удаления в зависимости от ответа зделать повторный запрос списка проекта
+    },
+    SubmitProject: function (payload) {
+      this.$store.dispatch('SubmitProject', payload).then(() => {
+        if (this.$store.state.responseStatus) {
+          this.GetProjects();
+        }
+      });
     },
   },
 };
-// PushTheValue: function (project) {
-//   this.allProjects.push(project);
-// },
 </script>

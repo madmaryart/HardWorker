@@ -14,17 +14,17 @@
         <tr
           v-for="report in this.allReports"
           :key="report.tableId"
-          v-on:click="showReportDetails(report.tableId)"
+          @click="SelectThisReport(report.tableId)"
         >
           <td>
             {{ report.dateFrom }} -
             {{ report.dateTo }}
           </td>
           <td>
-            {{ report.userName }}
+            {{ report.departmentName }}
           </td>
           <td>
-            {{ report.departmentName }}
+            {{ report.userName }}
           </td>
           <td>
             {{ report.tableId }}
@@ -34,46 +34,34 @@
     </table>
     <!-- Передаем в пагинацию props переменную totalPagesArr с количеством страниц -->
     <PaginationBar :totalPagesArr="this.totalPagesArr" />
-    <ReportsTableDetails v-if="reportDetails" :reportDetails="reportDetails" />
   </div>
 </template>
 
 <script>
-import ReportsTableDetails from '@/components/ReportsTableDetails.vue';
 import PaginationBar from '@/components/PaginationBar.vue';
 export default {
   name: 'ReportsTable',
-  components: { ReportsTableDetails, PaginationBar },
+  components: { PaginationBar },
   data() {
     return {
-      totalPagesArr: [], //Переменная с количеством страниц
-      someArr: [],
-      allReports: [],
-      selectedRowReportId: null,
-      reportDetails: null,
+      selectedReport: '',
     };
   },
-  mounted: function () {
-    this.GetReports();
+  props: {
+    allReports: [],
+    totalPagesArr: [], //Переменная с количеством страниц
   },
 
   methods: {
-    showReportDetails: function (reportId) {
-      this.selectedRowReportId = reportId;
-      this.GetReportDetails();
-    },
-    GetReports: function () {
-      this.$store.dispatch('Get_reports').then(() => {
-        this.allReports = this.$store.state.allReports;
-        this.totalPagesArr = this.$store.state.totalPages; //Записываем в totalPagesArr количество страниц из store
-      });
-    },
-    GetReportDetails: function () {
-      this.$store
-        .dispatch('Get_report_details', this.selectedRowReportId)
-        .then(() => {
-          this.reportDetails = this.$store.state.reportDetails;
-        });
+    SelectThisReport: function (reportId) {
+      this.selectedReport = reportId;
+      this.$emit('GetSelectedReport', this.selectedReport);
+      let myCollection = document.getElementsByClassName('active'); //Логика отображения выделения строчки в таблице
+      for (let i = 0; i < myCollection.length; i++) {
+        let elementOfCollection = myCollection[i];
+        elementOfCollection.classList.remove('active'); //Удаляем класс активный у всех строчек
+      }
+      event.currentTarget.classList.add('active'); //Подключаем класс активный к кликнутой строчке
     },
   },
 };
@@ -106,12 +94,13 @@ thead td {
 tr {
   border: 1px solid #e0e0e0;
   height: 26px;
+  cursor: pointer;
 }
 tr:hover {
-  background-color: #ebebeb;
+  background-color: #e5caff;
 }
-tr:active {
-  background-color: #b163ff;
-  color: white;
+.active {
+  background-color: #e5caff;
+  color: #22272b;
 }
 </style>

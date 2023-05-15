@@ -22,6 +22,7 @@ export default new Vuex.Store({
     totalPages: null, //всего страниц результатов (в зависимости от size в т.ч.)
     totalElements: null, //всего результатов
     project: {},
+    responseStatus: 0,
   },
   getters: {},
   mutations: {
@@ -63,6 +64,9 @@ export default new Vuex.Store({
     },
     allProject_response(state, project) {
       state.project = project;
+    },
+    write_response_status(state, data) {
+      state.responseStatus = data;
     },
   },
   actions: {
@@ -177,7 +181,7 @@ export default new Vuex.Store({
           });
       });
     },
-    SubmitReport(commit, reportForSubmit) {
+    SubmitReport({ commit }, reportForSubmit) {
       // Отправка заполненного табеля
       return new Promise((resolve, reject) => {
         let myHeaders = new Headers();
@@ -195,7 +199,8 @@ export default new Vuex.Store({
         fetch('http://127.0.0.1:8085/hardworker/table', requestOptions)
           .then((response) => {
             if (response.status == 200) {
-              commit(resolve());
+              commit('write_response_status', response.status);
+              resolve();
             } else reject(console.log('no'));
           })
           .catch((error) => {
@@ -281,7 +286,8 @@ export default new Vuex.Store({
         fetch('http://127.0.0.1:8085/hardworker/user', requestOptions)
           .then((response) => {
             if (response.status == 200) {
-              commit(resolve());
+              commit('write_response_status', response.status);
+              resolve();
             } else reject(console.log('no'));
           })
           .catch((error) => {
@@ -306,10 +312,8 @@ export default new Vuex.Store({
         fetch('http://127.0.0.1:8085/hardworker/project?', requestOptions)
           .then((response) => {
             if (response.status == 200) {
-              response.json().then((data) => {
-                commit('allProject_response', data);
-                resolve();
-              });
+              commit('write_response_status', response.status);
+              resolve();
             } else reject(console.log('no'));
           })
           .catch((error) => {
@@ -367,7 +371,7 @@ export default new Vuex.Store({
           });
       });
     },
-    Delete_project(commit, projectId) {
+    Delete_project({ commit }, projectId) {
       return new Promise((resolve, reject) => {
         let myHeaders = new Headers();
         myHeaders.append('Authorization', 'Basic ' + this.state.coded);
@@ -382,7 +386,32 @@ export default new Vuex.Store({
         )
           .then((response) => {
             if (response.status == 200) {
-              commit(resolve());
+              commit('write_response_status', response.status);
+              resolve();
+            } else reject(console.log('no'));
+          })
+          .catch((error) => {
+            reject(error, console.log('no'));
+          });
+      });
+    },
+    Delete_report({ commit }, reportId) {
+      return new Promise((resolve, reject) => {
+        let myHeaders = new Headers();
+        myHeaders.append('Authorization', 'Basic ' + this.state.coded);
+        let requestOptions = {
+          method: 'DELETE',
+          headers: myHeaders,
+          redirect: 'follow',
+        };
+        fetch(
+          'http://127.0.0.1:8085/hardworker/tables?tableId=' + reportId,
+          requestOptions
+        )
+          .then((response) => {
+            if (response.status == 200) {
+              commit('write_response_status', response.status);
+              resolve();
             } else reject(console.log('no'));
           })
           .catch((error) => {

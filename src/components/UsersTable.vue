@@ -14,14 +14,13 @@
         <td>Номер</td>
       </thead>
       <tbody>
-        <tr v-for="user in this.allUsers" :key="user.id">
+        <tr v-for="user in this.allUsers" :key="user.id" @click="SelectUserRow">
           <td>
             <input
               type="checkbox"
               :id="user.id"
               :value="user.username"
               v-model="checkedUsers[user.id]"
-              @click="show"
             />
           </td>
           <td>
@@ -36,7 +35,6 @@
       </tbody>
     </table>
     <pagination-bar :totalPagesArr="totalPagesArr"></pagination-bar>
-    <button @click="show">f</button>
   </div>
 </template>
 
@@ -47,24 +45,23 @@ export default {
   components: { PaginationBar },
   data() {
     return {
-      allUsers: [],
       totalPagesArr: [],
       checkedUsers: [],
     };
   },
-  mounted: function () {
-    this.GetUsers();
+  props: {
+    allUsers: [],
   },
 
   methods: {
-    GetUsers: function () {
-      this.$store.dispatch('Get_users').then(() => {
-        this.allUsers = this.$store.state.allUsers;
-        this.totalPagesArr = this.$store.state.totalPages;
-      });
-    },
-    show: function () {
-      console.log(this.checkedUsers);
+    SelectUserRow: function () {
+      let myCollection = document.getElementsByClassName('active'); //Логика отображения выделения строчки в таблице
+      for (let i = 0; i < myCollection.length; i++) {
+        let elementOfCollection = myCollection[i];
+        elementOfCollection.classList.remove('active'); //Удаляем класс активный у всех строчек
+      }
+      event.currentTarget.classList.add('active'); //Подключаем класс активный к кликнутой строчке
+      console.log(event.currentTarget);
     },
   },
 };
@@ -97,12 +94,13 @@ thead td {
 tr {
   border: 1px solid #e0e0e0;
   height: 26px;
+  cursor: pointer;
 }
 tr:hover {
-  background-color: #ebebeb;
+  background-color: #e5caff;
 }
-tr:active {
-  background-color: #b163ff;
-  color: white;
+.active {
+  background-color: #e5caff;
+  color: #22272b;
 }
 </style>

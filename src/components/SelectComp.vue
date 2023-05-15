@@ -60,8 +60,8 @@ export default {
     setSelectedProp: function (name, id) {
       this.isSelectedName = name;
       this.isSelectedId = id;
-      console.log(this.isSelectedName, this.isSelectedName);
-      this.$emit('GetSelectedItem', this.isSelectedName);
+      console.log(this.isSelectedName, this.isSelectedId);
+      this.$emit('GetSelectedItem', [this.isSelectedId, this.isSelectedName]);
       this.isOpened = !this.isOpened;
     },
   },

@@ -85,6 +85,7 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   border-radius: 5px;
+  overflow: scroll;
 }
 
 header {
@@ -95,6 +96,12 @@ header {
   margin-top: 0;
   color: #22272b;
 }
+p {
+  margin-top: 30px;
+  margin-bottom: 0px;
+  font-size: 18px;
+}
+
 img.i {
   animation: 18s linear 0s normal none infinite running i;
 }

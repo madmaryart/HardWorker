@@ -39,14 +39,16 @@ body {
 
 ::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
+  border-radius: 4px;
   border: 1px solid #d5d5d5;
 }
 ::-webkit-scrollbar-track {
-  border-radius: 0;
+  border-radius: 4px;
   background: #eeeeee;
 }
 ::-webkit-scrollbar-thumb {
-  border-radius: 0;
+  border-radius: 4px;
   background: #b163ff;
 }
 </style>

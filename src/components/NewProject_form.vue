@@ -13,12 +13,16 @@
       <input type="number" v-model="laidTime" />
     </label>
     <p>Добавить пользователей:</p>
-    <UsersTable_drop @GetSelectedUsers="ToWriteSelectedUsers" />
-
-    <button-primary @wasClicked="SubmitProject">Сохранить</button-primary>
-    <button-secondary @wasClicked="$parent.$emit('close')"
-      >Отмена</button-secondary
-    >
+    <UsersTable_drop
+      class="transfer"
+      @GetSelectedUsers="ToWriteSelectedUsers"
+    />
+    <div class="buttons">
+      <button-primary @wasClicked="EmitHandler">Сохранить</button-primary>
+      <button-secondary @wasClicked="$parent.$emit('close')"
+        >Отмена</button-secondary
+      >
+    </div>
   </div>
 </template>
 
@@ -51,23 +55,15 @@ export default {
       .then(() => (this.allDepartments = this.$store.state.allDepartments));
   },
   methods: {
-    SubmitProject: function () {
+    EmitHandler() {
       let name = this.name;
       let customer = this.customer;
       let laidTime = this.laidTime;
       let listUsers = this.listUsers;
-      this.$store
-        .dispatch('SubmitProject', {
-          name,
-          customer,
-          laidTime,
-          listUsers,
-        })
-        .then(this.$parent.$emit('haveResponse', this.$store.state.project));
-      console.log({ name, customer, laidTime, listUsers });
-
+      this.$emit('EmitSubmitProject', { name, customer, laidTime, listUsers });
       this.$parent.$emit('close');
     },
+
     ToWriteSelectedUsers: function (recievedUsersId) {
       this.listUsers = recievedUsersId;
     },
@@ -78,10 +74,24 @@ export default {
 .NewProjectForm {
   display: flex;
   flex-direction: column;
+  font-size: 14px;
+}
+input {
+  border-color: #bbbbbb;
+  border-radius: 2px;
 }
 label {
   display: flex;
   flex-direction: column;
   padding: 5px;
+}
+
+.transfer {
+  height: 400px;
+  overflow: scroll;
+}
+.buttons {
+  display: flex;
+  justify-content: center;
 }
 </style>

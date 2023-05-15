@@ -33,8 +33,8 @@ export default {
   },
   data: function () {
     return {
-      userLogin: 'admin',
-      userPassword: 'admin',
+      userLogin: '',
+      userPassword: '',
       re: [],
     };
   },
